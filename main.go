@@ -18,6 +18,8 @@ func init() {
 	flag.StringVar(&url, "url", "", "Url of the feed")
 	var strPattern string
 	flag.StringVar(&strPattern, "pattern", "", "Pattern to search")
+	var logPath string
+	flag.StringVar(&logPath, "logpath", "rsswatch.log", "Path to write logs")
 	flag.Parse()
 	if url == "" {
 		flag.Usage()
@@ -35,8 +37,6 @@ func init() {
 	}
 	pattern = p
 
-	var logPath string
-	flag.StringVar(&logPath, "logpath", "rsswatch.log", "Path to write logs")
 	setUpLogger(logPath)
 }
 
