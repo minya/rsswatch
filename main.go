@@ -13,6 +13,7 @@ import (
 
 var url string
 var pattern *regexp.Regexp
+var poSettings *gopushover.PushoverSettings
 
 func init() {
 	flag.StringVar(&url, "url", "", "Url of the feed")
@@ -38,6 +39,13 @@ func init() {
 	pattern = p
 
 	setUpLogger(logPath)
+
+	settings, err := gopushover.ReadSettings("pushover.json")
+	if err != nil {
+		os.Stderr.WriteString("Can't get pushover settings\n")
+		os.Exit(-1)
+	}
+	poSettings = &settings
 }
 
 func main() {
@@ -68,8 +76,7 @@ func main() {
 }
 
 func notify(item *gofeed.Item) {
-	settings, _ := gopushover.ReadSettings("pushover.json")
-	gopushover.SendMessage(settings.Token, settings.User, item.Title, item.Description)
+	gopushover.SendMessage(poSettings.Token, poSettings.User, item.Title, item.Description)
 }
 
 func readState() time.Time {
