@@ -41,6 +41,7 @@ func init() {
 }
 
 func main() {
+	log.Println("Start")
 	parser := gofeed.NewParser()
 	feed, err := parser.ParseURL(url)
 	if err != nil {
@@ -56,11 +57,14 @@ func main() {
 
 	for _, item := range feed.Items {
 		if pattern.MatchString(item.Title) && item.PublishedParsed.After(date) {
+			log.Printf("Found an item on %v\n", date)
 			saveState(item.PublishedParsed)
 			notify(item)
 			return
 		}
 	}
+
+	log.Printf("Nothing was found")
 }
 
 func notify(item *gofeed.Item) {
