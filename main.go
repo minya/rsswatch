@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"github.com/microcosm-cc/bluemonday"
 	"github.com/minya/gopushover"
 	"github.com/mmcdole/gofeed"
 	"io/ioutil"
@@ -76,7 +77,9 @@ func main() {
 }
 
 func notify(item *gofeed.Item) {
-	gopushover.SendMessage(poSettings.Token, poSettings.User, item.Title, item.Description)
+	p := bluemonday.StripTagsPolicy()
+	description := p.Sanitize(item.Description)
+	gopushover.SendMessage(poSettings.Token, poSettings.User, item.Title, description)
 }
 
 func readState() time.Time {
