@@ -22,12 +22,20 @@ func init() {
 	flag.StringVar(&strPattern, "pattern", "", "Pattern to search")
 	var logPath string
 	flag.StringVar(&logPath, "logpath", "rsswatch.log", "Path to write logs")
+	var poSettingsPath string
+	flag.StringVar(&poSettingsPath, "pushoverPath", "", "Path to pushover settings")
+
+	setUpLogger(logPath)
+
 	flag.Parse()
 	if url == "" {
+		os.Stderr.WriteString("Url must not be empty\n")
 		flag.Usage()
 		os.Exit(-1)
 	}
+
 	if strPattern == "" {
+		os.Stderr.WriteString("Pattern must not be empty\n")
 		flag.Usage()
 		os.Exit(-1)
 	}
@@ -39,9 +47,12 @@ func init() {
 	}
 	pattern = p
 
-	setUpLogger(logPath)
-
-	settings, err := gopushover.ReadSettings("pushover.json")
+	if poSettingsPath == "" {
+		os.Stderr.WriteString("Path to pushover settings must not be empty\n")
+		flag.Usage()
+		os.Exit(-1)
+	}
+	settings, err := gopushover.ReadSettings(poSettingsPath)
 	if err != nil {
 		os.Stderr.WriteString("Can't get pushover settings\n")
 		os.Exit(-1)
