@@ -107,7 +107,8 @@ func readState() time.Time {
 }
 
 func saveState(itemTime *time.Time) {
-	file, _ := os.OpenFile("state", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	os.Remove("state")
+	file, _ := os.OpenFile("state", os.O_RDWR|os.O_CREATE, 0666)
 	file.WriteString(itemTime.Format("2006-01-02 15:04:05"))
 }
 
