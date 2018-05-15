@@ -2,3 +2,4 @@ pushover.json
 state
 *.log
 rsswatch
+*.swp
